@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сосебел AI - Автоматическая генерация кода</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: #64b5f6;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: #64b5f6;
+            font-weight: 300;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #e3f2fd;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #64b5f6;
+        }
+
+        nav a.active {
+            color: #64b5f6;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #64b5f6;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.05), rgba(26, 35, 126, 0.05)), url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+            padding: 80px 0;
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 60px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #1a237e;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #444;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 35, 126, 0.4);
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+        }
+
+        /* Subsystems Section */
+        .subsystems {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: #1a237e;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #64b5f6;
+            border-radius: 2px;
+        }
+
+        .subsystems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .subsystem-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .subsystem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .subsystem-icon {
+            font-size: 48px;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+
+        .subsystem-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #1a237e;
+        }
+
+        .subsystem-card p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Interface Subsystem */
+        .interface-subsystem {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(26, 35, 126, 0.2);
+        }
+
+        .interface-subsystem h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .interface-subsystem p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #e3f2fd;
+        }
+
+        /* Integration Section */
+        .integration {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .integration h3 {
+            font-size: 28px;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+
+        .integration-icon {
+            font-size: 60px;
+            color: #64b5f6;
+            margin: 20px 0;
+        }
+
+        /* Use Cases Section */
+        .use-cases {
+            margin-bottom: 80px;
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .use-case-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+
+        .use-case-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .use-case-card h4 {
+            font-size: 20px;
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .use-case-icon {
+            color: #64b5f6;
+            font-size: 22px;
+        }
+
+        .use-case-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .user-tag {
+            display: inline-block;
+            background-color: #e8eaf6;
+            color: #1a237e;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a237e;
+            color: #e3f2fd;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .footer-logo span {
+            color: #64b5f6;
+        }
+
+        .copyright {
+            font-size: 14px;
+            color: #b0bec5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-content {
+                padding: 30px 20px;
+            }
+
+            .hero h2 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .interface-subsystem {
+                padding: 30px 20px;
+            }
+
+            .subsystem-card, .use-case-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header & Navigation -->
+<header>
+    <div class="container header-content">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-robot"></i></div>
+            <h1>Сосебел <span>AI</span></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Главная</a></li>
+                <li><a href="#">Генератор</a></li>
+                <li><a href="#">Шаблоны</a></li>
+                <li><a href="#">Проекты</a></li>
+                <li><a href="#">Профиль</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-content">
+        <h2>Система автоматического генерирования программного кода</h2>
+        <p>Ускорьте процесс разработки, снизите количество рутинных задач и повысьте качество кода с помощью нашей интеллектуальной системы генерации</p>
+        <a href="#" class="cta-button">Начать работу →</a>
+        <p style="margin-top: 30px; font-weight: 600;">Подсистемы</p>
+    </div>
+</section>
+
+<!-- Subsystems Section -->
+<section class="subsystems">
+    <div class="container">
+        <h2 class="section-title">Подсистемы</h2>
+        <div class="subsystems-grid">
+            <div class="subsystem-card">
+                <div class="subsystem-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Анализ требований</h3>
+                <p>Преобразует естественный язык, диаграммы и спецификации в структурированную модель</p>
+            </div>
+
+            <div class="subsystem-card">
+                <div class="subsystem-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Хранение знаний</h3>
+                <p>База данных с синтаксическими конструкциями, шаблонами проектирования и алгоритмами</p>
+            </div>
+
+            <div class="subsystem-card">
+                <div class="subsystem-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Генерация кода</h3>
+                <p>Ядро системы, создающее исходный код на основе проанализированных требований</p>
+            </div>
+        </div>
+
+        <div class="interface-subsystem">
+            <h3>ИНТЕРФЕЙСНАЯ ПОДСИСТЕМА</h3>
+            <p>Удобные инструменты для ввода требований, визуализации и редактирования кода</p>
+        </div>
+
+        <div class="integration">
+            <h3>Интеграция всех подсистем</h3>
+            <div class="integration-icon">
+                <i class="fas fa-sync-alt"></i>
+            </div>
+            <p>Все подсистемы работают совместно для обеспечения максимальной эффективности генерации кода</p>
+        </div>
+    </div>
+</section>
+
+<!-- Use Cases Section -->
+<section class="use-cases">
+    <div class="container">
+        <h2 class="section-title">Основные сценарии использования</h2>
+        <div class="use-cases-grid">
+            <div class="use-case-card">
+                <h4><i class="fas fa-cogs use-case-icon"></i> Выстраивание разработки модуля</h4>
+                <p>Разработчик описывает функциональность, система генерирует контроллеры, модели и сервисы</p>
+                <div class="user-tag">Пользователь: Разработчик ПО</div>
+            </div>
+
+            <div class="use-case-card">
+                <h4><i class="fas fa-lightbulb use-case-icon"></i> Создание прототипа</h4>
+                <p>Системный аналитик создает базовую структуру проекта для демонстрации заказчикам</p>
+                <div class="user-tag">Пользователь: Системный аналитик</div>
+            </div>
+
+            <div class="use-case-card">
+                <h4><i class="fas fa-graduation-cap use-case-icon"></i> Обучение</h4>
+                <p>Студент получает код с подробными решениями, объясняющими каждый шаг</p>
+                <div class="user-tag">Пользователь: Студент</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container footer-content">
+        <div class="footer-logo">
+            <i class="fas fa-robot"></i>
+            <div>Сосебел <span>AI</span></div>
+        </div>
+        <p class="copyright">© 2023 Сосебел AI. Автоматическая генерация кода. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    // Highlight active nav link on click
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('nav a').forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+
+            // Scroll to section if not "Главная"
+            if(this.textContent !== 'Главная') {
+                const sectionId = this.textContent.toLowerCase();
+                const section = document.getElementById(sectionId);
+                if(section) {
+                    window.scrollTo({
+                        top: section.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Add hover effect to cards
+    document.querySelectorAll('.subsystem-card, .use-case-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.cursor = 'pointer';
+        });
+    });
+</script>
+</body>
+</html>

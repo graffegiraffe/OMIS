@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGen AI - Автоматическая генерация кода</title>
+    <style>
+        /* Основные стили из globals.css и Tailwind */
+        :root {
+            --font-size: 16px;
+            --background: #ffffff;
+            --foreground: #0f172a;
+            --card: #ffffff;
+            --card-foreground: #0f172a;
+            --primary: #030213;
+            --primary-foreground: #ffffff;
+            --secondary: #f1f5f9;
+            --secondary-foreground: #030213;
+            --muted: #ececf0;
+            --muted-foreground: #717182;
+            --accent: #e9ebef;
+            --accent-foreground: #030213;
+            --destructive: #d4183d;
+            --destructive-foreground: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --input: transparent;
+            --input-background: #f3f3f5;
+            --radius: 0.625rem;
+            --sidebar: #fafafa;
+            --sidebar-foreground: #0f172a;
+            --sidebar-primary: #030213;
+            --sidebar-primary-foreground: #fafafa;
+            --sidebar-accent: #f7f7f7;
+            --sidebar-accent-foreground: #1a1a1a;
+            --sidebar-border: #e5e5e5;
+            --sidebar-ring: #94a3b8;
+        }
+
+        .dark {
+            --background: #0f172a;
+            --foreground: #f8fafc;
+            --card: #0f172a;
+            --card-foreground: #f8fafc;
+            --primary: #f8fafc;
+            --primary-foreground: #1a1a1a;
+            --secondary: #1e293b;
+            --secondary-foreground: #f8fafc;
+            --muted: #1e293b;
+            --muted-foreground: #94a3b8;
+            --accent: #1e293b;
+            --accent-foreground: #f8fafc;
+            --destructive: #7f1d1d;
+            --destructive-foreground: #fca5a5;
+            --border: #1e293b;
+            --input: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border-color: var(--border);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--foreground);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* Навигация */
+        nav {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 0.875rem;
+        }
+
+        .nav-button:hover {
+            background: #f1f5f9;
+        }
+
+        .nav-button.active {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* Основной контент */
+        .container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Карточки */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Кнопки */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+
+        /* Формы */
+        .input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            background: white;
+            min-height: 16rem;
+            resize: vertical;
+            transition: all 0.2s;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .select {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            background: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+        }
+
+        /* Заголовки */
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        /* Утилитарные классы */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-slate-600 { color: #64748b; }
+        .text-slate-900 { color: #0f172a; }
+        .text-blue-600 { color: #2563eb; }
+        .text-purple-600 { color: #7c3aed; }
+        .text-green-600 { color: #059669; }
+        .text-red-600 { color: #dc2626; }
+        .text-yellow-600 { color: #d97706; }
+
+        .bg-white { background: white; }
+        .bg-slate-50 { background: #f8fafc; }
+        .bg-slate-100 { background: #f1f5f9; }
+        .bg-blue-50 { background: #dbeafe; }
+        .bg-blue-100 { background: #dbeafe; }
+        .bg-purple-50 { background: #f3e8ff; }
+        .bg-purple-100 { background: #e9d5ff; }
+        .bg-green-50 { background: #d1fae5; }
+        .bg-green-100 { background: #a7f3d0; }
+        .bg-yellow-50 { background: #fef3c7; }
+        .bg-yellow-100 { background: #fde68a; }
+        .bg-red-50 { background: #fee2e2; }
+        .bg-red-100 { background: #fecaca; }
+
+        .border { border: 1px solid var(--border); }
+        .border-t { border-top: 1px solid var(--border); }
+        .border-b { border-bottom: 1px solid var(--border); }
+
+        .rounded { border-radius: 0.25rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-full { border-radius: 9999px; }
+
+        .shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+        .shadow-md { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .shadow-lg { box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); }
+
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .inline-flex { display: inline-flex; }
+
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .justify-end { justify-content: flex-end; }
+
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+
+        .w-full { width: 100%; }
+        .w-5 { width: 1.25rem; }
+        .w-6 { width: 1.5rem; }
+        .w-8 { width: 2rem; }
+        .w-10 { width: 2.5rem; }
+        .w-12 { width: 3rem; }
+        .w-16 { width: 4rem; }
+        .w-20 { width: 5rem; }
+
+        .h-5 { height: 1.25rem; }
+        .h-6 { height: 1.5rem; }
+        .h-8 { height: 2rem; }
+        .h-10 { height: 2.5rem; }
+        .h-12 { height: 3rem; }
+        .h-16 { height: 4rem; }
+        .h-20 { height: 5rem; }
+
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+
+        .mx-auto { margin-left: auto; margin-right: auto; }
+
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .sticky { position: sticky; }
+
+        /* Адаптивная сетка */
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+        @media (min-width: 768px) {
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .md\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .md\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .lg\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .lg\:grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+            .lg\:grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* Специфические компоненты */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-purple {
+            background: #e9d5ff;
+            color: #7c3aed;
+        }
+
+        .badge-green {
+            background: #a7f3d0;
+            color: #059669;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-complete {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-draft {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 100;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 0.75rem;
+            max-width: 56rem;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: #f8fafc;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Анимации */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Код блоки */
+        .code-block {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-block code {
+            color: #0f172a;
+            white-space: pre;
+        }
+
+        /* Иконки (заглушки) */
+        .icon {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            background: currentColor;
+            mask-size: contain;
+            mask-position: center;
+            mask-repeat: no-repeat;
+        }
+
+        .icon-code { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.4 6L13 4.6 8.6 9 13 13.4 14.4 12 10.8 9z'/%3E%3C/svg%3E"); }
+        .icon-search { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z'/%3E%3C/svg%3E"); }
+        .icon-filter { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z'/%3E%3C/svg%3E"); }
+        .icon-download { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E"); }
+        .icon-eye { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z'/%3E%3C/svg%3E"); }
+        .icon-star { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E"); }
+        .icon-folder { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z'/%3E%3C/svg%3E"); }
+
+        /* Дополнительные утилиты */
+        .transition-colors { transition: color 0.2s, background-color 0.2s, border-color 0.2s; }
+        .transition-shadow { transition: box-shadow 0.2s; }
+        .transition-all { transition: all 0.2s; }
+
+        .cursor-pointer { cursor: pointer; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Скрыть/показать */
+        .hidden { display: none !important; }
+
+        /* Акцентные элементы */
+        .accent-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        }
+    </style>
+</head>
+<body>
+<!-- Навигация -->
+<nav>
+    <div class="nav-container">
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon">{'</>'}</div>
+            <div>
+                <div class="text-slate-900">CodeGen AI</div>
+                <div class="text-xs text-slate-500">Автоматическая генерация кода</div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-button active">Главная</button>
+            <button class="nav-button">Генератор</button>
+            <button class="nav-button">Шаблоны</button>
+            <button class="nav-button">Проекты</button>
+            <button class="nav-button">Профиль</button>
+        </div>
+    </div>
+    </div>
+</nav>
+
+<!-- Основной контент - Главная страница -->
+<main>
+    <div class="container">
+        <!-- Hero секция -->
+        <div class="text-center mb-16">
+            <h1>Система автоматического генерирования программного кода</h1>
+            <p class="text-slate-600 mx-auto mb-8" style="max-width: 48rem;">
+                Ускорьте процесс разработки, снизите количество рутинных задач и повысьте качество кода
+                с помощью нашей интеллектуальной системы генерации
+            </p>
+            <button class="btn btn-primary">
+                Начать работу
+                <span class="icon icon-arrow-right"></span>
+            </button>
+        </div>
+
+        <!-- Подсистемы -->
+        <div class="mb-16">
+            <h2 class="text-center mb-8">Подсистемы</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Карточка 1 -->
+                <div class="card">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <div class="icon icon-layout text-blue-600 w-6 h-6"></div>
+                    </div>
+                    <h3>Анализ требований</h3>
+                    <p class="text-sm text-slate-600">
+                        Преобразует естественный язык, диаграммы и спецификации в структурированную модель
+                    </p>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div class="card">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <div class="icon icon-database text-purple-600 w-6 h-6"></div>
+                    </div>
+                    <h3>Хранение знаний</h3>
+                    <p class="text-sm text-slate-600">
+                        База данных с синтаксическими конструкциями, шаблонами проектирования и алгоритмами
+                    </p>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div class="card">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <div class="icon icon-code text-green-600 w-6 h-6"></div>
+                    </div>
+                    <h3>Генерация кода</h3>
+                    <p class="text-sm text-slate-600">
+                        Ядро системы, создающее исходный код на основе проанализированных требований
+                    </p>
+                </div>
+
+                <!-- Карточка 4 -->
+                <div class="card">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                        <div class="icon icon-check-circle text-orange-600 w-6 h-6"></div>
+                    </div>
+                    <h3>Валидация и оптимизация</h3>
+                    <p class="text-sm text-slate-600">
+                        Проверка на ошибки, соответствие стандартам и оптимизация производительности
+                    </p>
+                </div>
+
+                <!-- Карточка 5 -->
+                <div class="card">
+                    <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mb-4">
+                        <div class="icon icon-layout text-pink-600 w-6 h-6"></div>
+                    </div>
+                    <h3>Интерфейсная подсистема</h3>
+                    <p class="text-sm text-slate-600">
+                        Удобные инструменты для ввода требований, визуализации и редактирования кода
+                    </p>
+                </div>
+
+                <!-- Карточка 6 -->
+                <div class="card accent-gradient">
+                    <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                        <div class="icon icon-zap text-white w-6 h-6"></div>
+                    </div>
+                    <p class="text-white text-center">Интеграция всех подсистем</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сценарии использования -->
+        <div class="mb-16">
+            <h2 class="text-center mb-8">Основные сценарии использования</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Сценарий 1 -->
+                <div class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 accent-gradient rounded-lg flex items-center justify-center">
+                            <div class="icon icon-code text-white w-5 h-5"></div>
+                        </div>
+                        <h3>Быстрая разработка модуля</h3>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Разработчик описывает функциональность, система генерирует контроллеры, модели и сервисы
+                    </p>
+                    <div class="text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
+                        <strong>Пользователь:</strong> Разработчик ПО
+                    </div>
+                </div>
+
+                <!-- Сценарий 2 -->
+                <div class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <div class="icon icon-shield text-white w-5 h-5"></div>
+                        </div>
+                        <h3>Создание прототипа</h3>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Системный аналитик создает базовую структуру проекта для демонстрации заказчикам
+                    </p>
+                    <div class="text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
+                        <strong>Пользователь:</strong> Системный аналитик
+                    </div>
+                </div>
+
+                <!-- Сценарий 3 -->
+                <div class="card">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                            <div class="icon icon-book-open text-white w-5 h-5"></div>
+                        </div>
+                        <h3>Обучение</h3>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Студент получает код с подробными комментариями, объясняющими каждый шаг решения
+                    </p>
+                    <div class="text-xs text-slate-500 bg-slate-50 rounded-lg p-3">
+                        <strong>Пользователь:</strong> Студент
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Преимущества -->
+        <div class="card">
+            <h2 class="text-center mb-8">Преимущества системы</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Преимущество 1 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div class="icon icon-zap text-blue-600 w-8 h-8"></div>
+                    </div>
+                    <h3>Скорость</h3>
+                    <p class="text-sm text-slate-600">Ускорение процесса разработки в несколько раз</p>
+                </div>
+
+                <!-- Преимущество 2 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div class="icon icon-check-circle text-green-600 w-8 h-8"></div>
+                    </div>
+                    <h3>Качество</h3>
+                    <p class="text-sm text-slate-600">Минимизация человеческих ошибок</p>
+                </div>
+
+                <!-- Преимущество 3 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div class="icon icon-database text-purple-600 w-8 h-8"></div>
+                    </div>
+                    <h3>Знания</h3>
+                    <p class="text-sm text-slate-600">Доступ к лучшим практикам и паттернам</p>
+                </div>
+
+                <!-- Преимущество 4 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <div class="icon icon-shield text-orange-600 w-8 h-8"></div>
+                    </div>
+                    <h3>Надежность</h3>
+                    <p class="text-sm text-slate-600">Автоматическая валидация и оптимизация</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Простая навигация между страницами
+    document.addEventListener('DOMContentLoaded', function() {
+        const navButtons = document.querySelectorAll('.nav-button');
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Удаляем активный класс у всех кнопок
+                navButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Добавляем активный класс текущей кнопке
+                this.classList.add('active');
+
+                // Здесь можно добавить логику переключения контента страницы
+                const pageName = this.textContent.trim();
+                console.log('Переход на страницу:', pageName);
+
+                // В реальном приложении здесь будет загрузка другого контента
+                // или переход на другую страницу
+            });
+        });
+
+        // Обработка клика по основной кнопке
+        document.querySelector('.btn-primary').addEventListener('click', function() {
+            // Переключаем на страницу генератора
+            navButtons.forEach(btn => {
+                if (btn.textContent.includes('Генератор')) {
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // Здесь можно загрузить контент страницы генератора
+                    console.log('Открытие генератора кода');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

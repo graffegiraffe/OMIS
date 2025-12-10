@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор кода - CodeGen AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/generator_style.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>CodeGen AI</span>
+                <h6>Автоматическая генерация кода</h6>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="generator.html" class="active">Генератор</a></li>
+                    <li><a href="#">Шаблоны</a></li>
+                    <li><a href="#">Проекты</a></li>
+                    <li><a href="#">Профиль</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Генератор кода</h1>
+                <p class="page-subtitle">Опишите требования к коду, и система автоматически создаст готовое решение</p>
+            </div>
+
+            <!-- Configuration Section -->
+            <section class="configuration">
+                <h2>Конфигурация</h2>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <label for="language">Язык программирования</label>
+                        <select id="language" class="config-select">
+                            <option value="typescript" selected>TypeScript</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="csharp">C#</option>
+                            <option value="php">PHP</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                        </select>
+                    </div>
+                    
+                    <div class="config-item">
+                        <label for="framework">Фреймворк</label>
+                        <select id="framework" class="config-select">
+                            <option value="react" selected>React</option>
+                            <option value="vue">Vue.js</option>
+                            <option value="angular">Angular</option>
+                            <option value="svelte">Svelte</option>
+                            <option value="express">Express.js</option>
+                            <option value="django">Django</option>
+                            <option value="spring">Spring Boot</option>
+                            <option value="laravel">Laravel</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Requirements Section -->
+            <section class="requirements">
+                <h2>Требования и спецификации</h2>
+                <textarea 
+                    id="requirementsInput" 
+                    class="requirements-textarea" 
+                    placeholder="Опишите что должен делать код. Например:&#10;Создать React компонент для отображения списка пользователей с возможностью фильтрации по имени. Компонент должен загружать данные из API и показывать индикатор загрузки."
+                ></textarea>
+                <div class="requirements-example">
+                    <p><strong>Пример:</strong> Создать React компонент для отображения списка пользователей с возможностью фильтрации по имени. Компонент должен загружать данные из API и показывать индикатор загрузки.</p>
+                </div>
+            </section>
+
+            <!-- Generated Code Section -->
+            <section class="generated-code">
+                <div class="generated-code-header">
+                    <h2><i class="fas fa-code"></i> Сгенерированный код</h2>
+                    <button id="generateBtn" class="generate-btn">
+                        <i class="fas fa-bolt"></i> Сгенерировать код
+                    </button>
+                </div>
+                
+                <div class="code-container">
+                    <div id="codePlaceholder" class="code-placeholder">
+                        <i class="fas fa-code"></i>
+                        <p>Код появится здесь после генерации</p>
+                    </div>
+                    
+                    <div id="codeContent" class="code-content" style="display: none;">
+<span class="code-keyword">import</span> React, { useState, useEffect } <span class="code-keyword">from</span> <span class="code-string">'react'</span>;
+<span class="code-keyword">import</span> axios <span class="code-keyword">from</span> <span class="code-string">'axios'</span>;
+
+<span class="code-comment">// Интерфейс для пользователя</span>
+<span class="code-keyword">interface</span> User {
+    id: <span class="code-keyword">number</span>;
+    name: <span class="code-keyword">string</span>;
+    email: <span class="code-keyword">string</span>;
+    avatar: <span class="code-keyword">string</span>;
+}
+
+<span class="code-comment">// Основной компонент списка пользователей</span>
+<span class="code-keyword">const</span> <span class="code-function">UserList</span>: React.FC = () <span class="code-keyword">=></span> {
+    <span class="code-comment">// Состояния компонента</span>
+    <span class="code-keyword">const</span> [users, setUsers] = useState&lt;User[]&gt;([]);
+    <span class="code-keyword">const</span> [filteredUsers, setFilteredUsers] = useState&lt;User[]&gt;([]);
+    <span class="code-keyword">const</span> [loading, setLoading] = useState&lt;<span class="code-keyword">boolean</span>&gt;(<span class="code-keyword">true</span>);
+    <span class="code-keyword">const</span> [filter, setFilter] = useState&lt;<span class="code-keyword">string</span>&gt;(<span class="code-string">''</span>);
+    <span class="code-keyword">const</span> [error, setError] = useState&lt;<span class="code-keyword">string</span> | <span class="code-keyword">null</span>&gt;(<span class="code-keyword">null</span>);
+
+    <span class="code-comment">// Загрузка данных при монтировании компонента</span>
+    useEffect(() <span class="code-keyword">=></span> {
+        <span class="code-function">fetchUsers</span>();
+    }, []);
+
+    <span class="code-comment">// Фильтрация пользователей при изменении фильтра</span>
+    useEffect(() <span class="code-keyword">=></span> {
+        <span class="code-keyword">const</span> filtered = users.<span class="code-function">filter</span>(user <span class="code-keyword">=></span>
+            user.name.<span class="code-function">toLowerCase</span>().<span class="code-function">includes</span>(filter.<span class="code-function">toLowerCase</span>())
+        );
+        <span class="code-function">setFilteredUsers</span>(filtered);
+    }, [users, filter]);
+
+    <span class="code-comment">// Функция загрузки пользователей из API</span>
+    <span class="code-keyword">const</span> <span class="code-function">fetchUsers</span> = <span class="code-keyword">async</span> () <span class="code-keyword">=></span> {
+        <span class="code-keyword">try</span> {
+            <span class="code-function">setLoading</span>(<span class="code-keyword">true</span>);
+            <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> axios.<span class="code-function">get</span>&lt;User[]&gt;(<span class="code-string">'https://jsonplaceholder.typicode.com/users'</span>);
+            <span class="code-function">setUsers</span>(response.data);
+            <span class="code-function">setFilteredUsers</span>(response.data);
+            <span class="code-function">setError</span>(<span class="code-keyword">null</span>);
+        } <span class="code-keyword">catch</span> (err) {
+            <span class="code-function">setError</span>(<span class="code-string">'Не удалось загрузить пользователей'</span>);
+            console.<span class="code-function">error</span>(<span class="code-string">'Ошибка при загрузке пользователей:'</span>, err);
+        } <span class="code-keyword">finally</span> {
+            <span class="code-function">setLoading</span>(<span class="code-keyword">false</span>);
+        }
+    };
+
+    <span class="code-comment">// Обработчик изменения фильтра</span>
+    <span class="code-keyword">const</span> <span class="code-function">handleFilterChange</span> = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) <span class="code-keyword">=></span> {
+        <span class="code-function">setFilter</span>(e.target.value);
+    };
+
+    <span class="code-comment">// Рендер компонента</span>
+    <span class="code-keyword">return</span> (
+        &lt;div className=<span class="code-string">"user-list-container"</span>&gt;
+            &lt;h1&gt;Список пользователей&lt;/h1&gt;
+            
+            &lt;div className=<span class="code-string">"filter-section"</span>&gt;
+                &lt;input
+                    type=<span class="code-string">"text"</span>
+                    placeholder=<span class="code-string">"Фильтр по имени..."</span>
+                    value={<span class="code-keyword">filter</span>}
+                    onChange={<span class="code-function">handleFilterChange</span>}
+                    className=<span class="code-string">"filter-input"</span>
+                /&gt;
+                &lt;span className=<span class="code-string">"user-count"</span>&gt;
+                    Найдено: {<span class="code-keyword">filteredUsers</span>.<span class="code-keyword">length</span>} пользователей
+                &lt;/span&gt;
+            &lt;/div&gt;
+
+            {<span class="code-keyword">loading</span> <span class="code-operator">?</span> (
+                &lt;div className=<span class="code-string">"loading-spinner"</span>&gt;
+                    &lt;i className=<span class="code-string">"fas fa-spinner fa-spin"</span>&gt;&lt;/i&gt;
+                    &lt;p&gt;Загрузка пользователей...&lt;/p&gt;
+                &lt;/div&gt;
+            ) <span class="code-operator">:</span> <span class="code-keyword">error</span> <span class="code-operator">?</span> (
+                &lt;div className=<span class="code-string">"error-message"</span>&gt;
+                    &lt;i className=<span class="code-string">"fas fa-exclamation-triangle"</span>&gt;&lt;/i&gt;
+                    &lt;p&gt;{<span class="code-keyword">error</span>}&lt;/p&gt;
+                    &lt;button onClick={<span class="code-function">fetchUsers</span>} className=<span class="code-string">"retry-btn"</span>&gt;
+                        Попробовать снова
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            ) <span class="code-operator">:</span> (
+                &lt;div className=<span class="code-string">"users-grid"</span>&gt;
+                    {<span class="code-keyword">filteredUsers</span>.<span class="code-function">map</span>((user) <span class="code-keyword">=></span> (
+                        &lt;div key={<span class="code-keyword">user</span>.<span class="code-keyword">id</span>} className=<span class="code-string">"user-card"</span>&gt;
+                            &lt;img src={<span class="code-keyword">user</span>.<span class="code-keyword">avatar</span> <span class="code-operator">||</span> <span class="code-string">'https://i.pravatar.cc/150?img='</span> + user.id} 
+                                 alt={<span class="code-keyword">user</span>.<span class="code-keyword">name</span>} 
+                                 className=<span class="code-string">"user-avatar"</span> /&gt;
+                            &lt;div className=<span class="code-string">"user-info"</span>&gt;
+                                &lt;h3&gt;{<span class="code-keyword">user</span>.<span class="code-keyword">name</span>}&lt;/h3&gt;
+                                &lt;p className=<span class="code-string">"user-email"</span>&gt;{<span class="code-keyword">user</span>.<span class="code-keyword">email</span>}&lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    ))}
+                &lt;/div&gt;
+            )}
+        &lt;/div&gt;
+    );
+};
+
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> UserList;
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">CodeGen AI</div>
+                    <p class="footer-description">Интеллектуальная система автоматической генерации программного кода для ускорения разработки и повышения качества программного обеспечения.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Навигация</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="generator.html">Генератор</a></li>
+                        <li><a href="#">Шаблоны</a></li>
+                        <li><a href="#">Проекты</a></li>
+                        <li><a href="#">Профиль</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="#">Документация</a></li>
+                        <li><a href="#">Блог</a></li>
+                        <li><a href="#">Примеры кода</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Контакты</h4>
+                    <ul>
+                        <li><a href="#">OMIS.info32170005@bsuir.by</a></li>
+                        <li><a href="#">+375 (25) 123-32-13</a></li>
+                        <li><a href="#">Барановичи, ул. Нескажу, д. 19</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025/12/07 CodeGen AI. Все права защищены. Дайте деняк пж</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            const icon = this.querySelector('i');
+            
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                nav.style.display = 'flex';
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '70px';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.backgroundColor = 'white';
+                nav.style.padding = '20px';
+                nav.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                nav.style.gap = '15px';
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+
+        // Generate code functionality
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const requirementsInput = document.getElementById('requirementsInput');
+            const languageSelect = document.getElementById('language');
+            const frameworkSelect = document.getElementById('framework');
+            const codePlaceholder = document.getElementById('codePlaceholder');
+            const codeContent = document.getElementById('codeContent');
+            
+            // Проверяем, введены ли требования
+            if (!requirementsInput.value.trim()) {
+                alert('Пожалуйста, опишите требования к коду перед генерацией.');
+                requirementsInput.focus();
+                return;
+            }
+            
+            // Показываем анимацию загрузки
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Генерация...';
+            this.disabled = true;
+            
+            // Имитируем задержку генерации кода
+            setTimeout(() => {
+                // Показываем сгенерированный код
+                codePlaceholder.style.display = 'none';
+                codeContent.style.display = 'block';
+                
+                // Восстанавливаем кнопку
+                this.innerHTML = '<i class="fas fa-check"></i> Код сгенерирован!';
+                
+                // Через 3 секунды возвращаем обычное состояние кнопки
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-bolt"></i> Сгенерировать код';
+                    this.disabled = false;
+                }, 3000);
+                
+                // Показываем сообщение с информацией о выбранных настройках
+                const language = languageSelect.options[languageSelect.selectedIndex].text;
+                const framework = frameworkSelect.options[frameworkSelect.selectedIndex].text;
+                
+                console.log(`Генерация кода для: ${language} + ${framework}`);
+                console.log(`Требования: ${requirementsInput.value}`);
+                
+            }, 2000); // 2 секунды задержки для имитации работы AI
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    return;
+                }
+                
+                const targetId = this.getAttribute('href');
+                if(targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGen AI - Автоматическая генерация кода</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/index_style.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>CodeGen AI</span>
+                <h6>Автоматическая генерация кода</h6>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Главная</a></li>
+                    <li><a href="#">Генератор</a></li>
+                    <li><a href="#">Шаблоны</a></li>
+                    <li><a href="#">Проекты</a></li>
+                    <li><a href="#">Профиль</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Система автоматического генерирования программного кода</h1>
+            <p>Ускорьте процесс разработки, снизите количество рутинных задач и повысьте качество кода с помощью нашей интеллектуальной системы генерации</p>
+            <a href="#" class="btn">Начать работу <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Subsystems Section -->
+        <section class="subsystems">
+            <h2 class="section-title">Подсистемы</h2>
+            <div class="subsystems-grid">
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Анализ требований</h3>
+                    <p>Преобразует естественный язык, диаграммы и спецификации в структурированную модель</p>
+                </div>
+                
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Хранение знаний</h3>
+                    <p>База данных с синтаксическими конструкциями, шаблонами проектирования и алгоритмами</p>
+                </div>
+                
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Генерация кода</h3>
+                    <p>Ядро системы, создающее исходный код на основе проанализированных требований</p>
+                </div>
+            </div>
+            
+            <div class="subsystems-grid">
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Валидация и оптимизация</h3>
+                    <p>Проверка на ошибки, соответствие стандартам и оптимизация производительности</p>
+                </div>
+                
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>Интерфейсная подсистема</h3>
+                    <p>Удобные инструменты для ввода требований, визуализации и редактирования кода</p>
+                </div>
+                
+                <div class="subsystem-card">
+                    <div class="subsystem-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Интеграция всех подсистем</h3>
+                    <p>Здесь могла бы быть ваша реклама :)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section class="use-cases">
+            <h2>Основные сценарии использования</h2>
+            <div class="use-cases-grid">
+                <div class="use-case-card">
+                    <h3><i class="fas fa-bolt"></i> Быстрая разработка модуля</h3>
+                    <p>Разработчик описывает функциональность, система генерирует контроллеры, модели и сервисы</p>
+                    <span class="user-badge">Пользователь: Разработчик ПО</span>
+                </div>
+                
+                <div class="use-case-card">
+                    <h3><i class="fas fa-rocket"></i> Создание прототипа</h3>
+                    <p>Системный аналитик создает базовую структуру проекта для демонстрации заказчикам</p>
+                    <span class="user-badge">Пользователь: Системный аналитик</span>
+                </div>
+                
+                <div class="use-case-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Обучение</h3>
+                    <p>Студент получает код с подробными комментариями, объясняющими каждый шаг решения</p>
+                    <span class="user-badge">Пользователь: Студент</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantages Section -->
+        <section class="advantages">
+            <h2>Преимущества системы</h2>
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Скорость</h3>
+                    <p>Ускорение процесса разработки в несколько раз</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Качество</h3>
+                    <p>Минимизация человеческих ошибок</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Знания</h3>
+                    <p>Доступ к лучшим практикам и паттернам проектирования</p>
+                </div>
+                
+                <div class="advantage-card">
+                    <div class="advantage-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Надежность</h3>
+                    <p>Автоматическая валидация и оптимизация</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">CodeGen AI</div>
+                    <p class="footer-description">Интеллектуальная система автоматической генерации программного кода для ускорения разработки и повышения качества программного обеспечения.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Навигация</h4>
+                    <ul>
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="#">Генератор</a></li>
+                        <li><a href="#">Шаблоны</a></li>
+                        <li><a href="#">Проекты</a></li>
+                        <li><a href="#">Профиль</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="#">Документация</a></li>
+                        <li><a href="#">Блог</a></li>
+                        <li><a href="#">Примеры кода</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Контакты</h4>
+                    <ul>
+                        <li><a href="#">OMIS.info32170005@bsuir.by</a></li>
+                        <li><a href="#">+375 (25) 123-32-13</a></li>
+                        <li><a href="#">Барановичи, ул. Нескажу, д. 19</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025/12/07 CodeGen AI. Все права защищены. Дайте деняк пж</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const nav = document.querySelector('nav ul');
+            const icon = this.querySelector('i');
+            
+            if (nav.style.display === 'flex') {
+                nav.style.display = 'none';
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                nav.style.display = 'flex';
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '70px';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.backgroundColor = 'white';
+                nav.style.padding = '20px';
+                nav.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                nav.style.gap = '15px';
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    return;
+                }
+                
+                const targetId = this.getAttribute('href');
+                if(targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Add active class to nav items on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if(pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои проекты - CodeGen AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/projects_style.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <span>CodeGen AI</span>
+                <h6>Автоматическая генерация кода</h6>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="generator.html">Генератор</a></li>
+                    <li><a href="templates.html">Шаблоны</a></li>
+                    <li><a href="projects.html" class="active">Проекты</a></li>
+                    <li><a href="#">Профиль</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Мои проекты</h1>
+                <p class="page-subtitle">История всех сгенерированных проектов и модулей</p>
+            </div>
+
+            <!-- Stats Section -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-folder"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalProjects">6</div>
+                        <div class="stat-label">Всего проектов</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="completedProjects">4</div>
+                        <div class="stat-label">Завершенных</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalLines">3,089</div>
+                        <div class="stat-label">Строк кода</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="draftProjects">2</div>
+                        <div class="stat-label">Черновиков</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Grid -->
+            <section class="projects-section">
+                <div class="section-header">
+                    <h2>Активные проекты</h2>
+                    <button class="create-project-btn" id="createProjectBtn">
+                        <i class="fas fa-plus"></i>
+                        Новый проект
+                    </button>
+                </div>
+                
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Project 1 -->
+                    <div class="project-card" data-status="completed">
+                        <div class="project-header">
+                            <h3 class="project-title">API для управления пользователями</h3>
+                            <p class="project-description">REST API с полным набором CRUD операций для управления пользователями</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">TypeScript</span>
+                            <span class="project-tag framework">NestJS</span>
+                            <span class="project-tag status">Завершен</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">456</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">8</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 25.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-download"></i>
+                                    Скачать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card" data-status="completed">
+                        <div class="project-header">
+                            <h3 class="project-title">Dashboard для аналитики</h3>
+                            <p class="project-description">Интерактивная панель с графиками и таблицами данных</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">TypeScript</span>
+                            <span class="project-tag framework">React</span>
+                            <span class="project-tag status">Завершен</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">1,203</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">15</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 26.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-download"></i>
+                                    Скачать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-card" data-status="draft">
+                        <div class="project-header">
+                            <h3 class="project-title">Сервис аутентификации</h3>
+                            <p class="project-description">Микросервис для управления аутентификацией и авторизацией</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">JavaScript</span>
+                            <span class="project-tag framework">Express</span>
+                            <span class="project-tag status-draft">Черновик</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">287</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">5</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 24.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Редактировать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 4 -->
+                    <div class="project-card" data-status="completed">
+                        <div class="project-header">
+                            <h3 class="project-title">Компонент таблицы с фильтрацией</h3>
+                            <p class="project-description">Переиспользуемый компонент таблицы с сортировкой и фильтрацией</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">TypeScript</span>
+                            <span class="project-tag framework">React</span>
+                            <span class="project-tag status">Завершен</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">342</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">3</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 23.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-download"></i>
+                                    Скачать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 5 -->
+                    <div class="project-card" data-status="draft">
+                        <div class="project-header">
+                            <h3 class="project-title">Система обработки очередей</h3>
+                            <p class="project-description">Система для асинхронной обработки задач с использованием очередей</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">TypeScript</span>
+                            <span class="project-tag framework">NestJS</span>
+                            <span class="project-tag status-draft">Черновик</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">178</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">4</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 27.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-edit"></i>
+                                    Редактировать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 6 -->
+                    <div class="project-card" data-status="completed">
+                        <div class="project-header">
+                            <h3 class="project-title">Модуль обработки платежей</h3>
+                            <p class="project-description">Интеграция с платежными системами и обработка транзакций</p>
+                        </div>
+                        
+                        <div class="project-tags">
+                            <span class="project-tag language">Python</span>
+                            <span class="project-tag framework">FastAPI</span>
+                            <span class="project-tag status">Завершен</span>
+                        </div>
+                        
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">623</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">9</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Изменен: 27.11.2024</span>
+                        </div>
+                        
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary open-project">
+                                    <i class="fas fa-folder-open"></i>
+                                    Открыть
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-download"></i>
+                                    Скачать
+                                </button>
+                            </div>
+                            <button class="action-btn danger delete-project">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty State (hidden by default) -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>Нет проектов</h3>
+                    <p>У вас пока нет созданных проектов. Нажмите "Новый проект", чтобы начать работу.</p>
+                    <button class="create-project-btn" id="createProjectEmptyBtn">
+                        <i class="fas fa-plus"></i>
+                        Создать первый проект
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Create Project Modal -->
+    <div id="createProjectModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Создать новый проект</h2>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="projectName">Название проекта</label>
+                    <input type="text" id="projectName" placeholder="Например: API для пользователей" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectDescription">Описание</label>
+                    <textarea id="projectDescription" placeholder="Опишите что должен делать ваш проект"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectLanguage">Язык программирования</label>
+                    <select id="projectLanguage" required>
+                        <option value="">Выберите язык</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="php">PHP</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectFramework">Фреймворк</label>
+                    <select id="projectFramework" required>
+                        <option value="">Выберите фреймворк</option>
+                        <option value="react">React</option>
+                        <option value="vue">Vue.js</option>
+                        <option value="angular">Angular</option>
+                        <option value="nestjs">NestJS</option>
+                        <option value="express">Express.js</option>
+                        <option value="fastapi">FastAPI</option>
+                        <option value="spring">Spring Boot</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="projectStatus">Статус</label>
+                    <select id="projectStatus" required>
+                        <option value="draft">Черновик</option>
+                        <option value="completed">Завершен</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit">Создать проект</button>
+                    <button type="button" id="cancelCreate">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-logo">CodeGen AI</div>
+                    <p class="footer-description">Интеллектуальная система автоматической генерации программного кода для ускорения разработки и повышения качества программного обеспечения.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Навигация</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="generator.html">Генератор</a></li>
+                        <li><a href="templates.html">Шаблоны</a></li>
+                        <li><a href="#">Проекты</a></li>
+                        <li><a href="#">Профиль</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="#">Документация</a></li>
+                        <li><a href="#">Блог</a></li>
+                        <li><a href="#">Примеры кода</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Контакты</h4>
+                    <ul>
+                        <li><a href="#">OMIS.info32170005@bsuir.by</a></li>
+                        <li><a href="#">+375 (25) 123-32-13</a></li>
+                        <li><a href="#">Барановичи, ул. Нескажу, д. 19</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025/12/07 CodeGen AI. Все права защищены. Дайте деняк пж</p>
+            </div>
+        </div>
+    </footer>
