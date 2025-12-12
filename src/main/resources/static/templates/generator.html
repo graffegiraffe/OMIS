@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор кода - CodeGen AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/generator_style.css">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+            <span>CodeGen AI</span>
+            <h6>Автоматическая генерация кода</h6>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="generator.html" class="active">Генератор</a></li>
+                <li><a href="templates.html">Шаблоны</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+            </ul>
+        </nav>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="page-header">
+            <h1>Генератор кода</h1>
+            <p class="page-subtitle">Опишите требования к коду, и система автоматически создаст готовое решение</p>
+        </div>
+
+        <section class="configuration">
+            <h2>Конфигурация</h2>
+            <div class="config-grid">
+                <div class="config-item">
+                    <label for="language">Язык программирования</label>
+                    <select id="language" class="config-select">
+                        <option value="typescript" selected>TypeScript</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option value="php">PHP</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                    </select>
+                </div>
+
+                <div class="config-item">
+                    <label for="framework">Фреймворк</label>
+                    <select id="framework" class="config-select">
+                        <option value="react" selected>React</option>
+                        <option value="vue">Vue.js</option>
+                        <option value="angular">Angular</option>
+                        <option value="svelte">Svelte</option>
+                        <option value="express">Express.js</option>
+                        <option value="django">Django</option>
+                        <option value="spring">Spring Boot</option>
+                        <option value="laravel">Laravel</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="requirements">
+            <h2>Требования и спецификации</h2>
+            <textarea
+                    id="requirementsInput"
+                    class="requirements-textarea"
+                    placeholder="Опишите что должен делать код. Например:&#10;Создать React компонент для отображения списка пользователей с возможностью фильтрации по имени. Компонент должен загружать данные из API и показывать индикатор загрузки."
+            ></textarea>
+            <div class="requirements-example">
+                <p><strong>Пример:</strong> Создать React компонент для отображения списка пользователей с возможностью фильтрации по имени. Компонент должен загружать данные из API и показывать индикатор загрузки.</p>
+            </div>
+        </section>
+
+        <section class="generated-code">
+            <div class="generated-code-header">
+                <h2><i class="fas fa-code"></i> Сгенерированный код</h2>
+                <button id="generateBtn" class="generate-btn">
+                    <i class="fas fa-bolt"></i> Сгенерировать код
+                </button>
+            </div>
+
+            <div class="code-container">
+                <div id="codePlaceholder" class="code-placeholder">
+                    <i class="fas fa-code"></i>
+                    <p>Код появится здесь после генерации</p>
+                </div>
+
+                <div id="codeContent" class="code-content" style="display: none; white-space: pre-wrap;"></div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-logo">CodeGen AI</div>
+                <p class="footer-description">Интеллектуальная система автоматической генерации программного кода для ускорения разработки и повышения качества программного обеспечения.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Навигация</h4>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="generator.html">Генератор</a></li>
+                    <li><a href="#">Шаблоны</a></li>
+                    <li><a href="#">Проекты</a></li>
+                    <li><a href="#">Профиль</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Контакты</h4>
+                <ul>
+                    <li><a href="#">OMIS.info32170005@bsuir.by</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 CodeGen AI. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<script type="module">
+    import { generateCode, checkStatus, showNotification } from '/js/frontend-config.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const generateBtn = document.getElementById('generateBtn');
+
+        generateBtn.addEventListener('click', async function() {
+            const requirementsInput = document.getElementById('requirementsInput');
+            const languageSelect = document.getElementById('language');
+            const frameworkSelect = document.getElementById('framework');
+            const codePlaceholder = document.getElementById('codePlaceholder');
+            const codeContent = document.getElementById('codeContent');
+
+            // валидация
+            if (!requirementsInput.value.trim()) {
+                showNotification('Пожалуйста, опишите требования к коду.', 'error');
+                return;
+            }
+
+            // блокировка кнопки
+            const originalBtnContent = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Обработка...';
+            this.disabled = true;
+
+            codePlaceholder.style.display = 'none';
+            codeContent.style.display = 'block';
+            codeContent.textContent = "// Отправка запроса на сервер...";
+
+            try {
+                // отправка запроса на генерацию
+                let result = await generateCode(
+                    requirementsInput.value,
+                    languageSelect.value,
+                    frameworkSelect.value
+                );
+
+                console.log("Initial Response:", result);
+                const requirementId = result.id;
+
+                //проверка статуса
+                // мы спрашиваем сервер каждые 2 секунды, пока статус не станет COMPLETED или FAILED
+                let attempts = 0;
+                const maxAttempts = 30;
+
+                while (result.status === 'PENDING' || result.status === 'ANALYZING' || result.status === 'GENERATING' || result.status === 'VALIDATING') {
+                    if (attempts >= maxAttempts) {
+                        throw new Error("Generation timeout exceeded");
+                    }
+
+                    codeContent.textContent = `// Статус: ${result.status}...\n// Ожидание ответа от нейросети (попытка ${attempts + 1}/${maxAttempts})`;
+
+                    // Ждем 2 секунды
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    // Проверяем статус снова
+                    result = await checkStatus(requirementId);
+                    console.log("Polling Status:", result.status);
+                    attempts++;
+                }
+
+                // обработка результата
+                if (result.status === 'COMPLETED' && result.generatedCodes && result.generatedCodes.length > 0) {
+                    codeContent.textContent = result.generatedCodes[0].sourceCode;
+                    showNotification('Код успешно сгенерирован!', 'success');
+                    this.innerHTML = '<i class="fas fa-check"></i> Готово!';
+                } else if (result.status === 'FAILED') {
+                    throw new Error("Генерация завершилась ошибкой на сервере");
+                } else {
+                    codeContent.textContent = "// Не удалось получить код. Статус: " + result.status;
+                    showNotification('Что-то пошло не так', 'warning');
+                }
+
+            } catch (error) {
+                console.error("Generation Error:", error);
+                codeContent.textContent = "// Ошибка: " + error.message;
+                showNotification('Ошибка: ' + error.message, 'error');
+                this.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Ошибка';
+            } finally {
+                // 3 сек и кнопка снова гуд
+                setTimeout(() => {
+                    this.innerHTML = originalBtnContent;
+                    this.disabled = false;
+                }, 3000);
+            }
+        });
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                const nav = document.querySelector('nav ul');
+                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+                if(nav.style.display === 'flex') {
+                    nav.style.flexDirection = 'column';
+                    nav.style.position = 'absolute';
+                    nav.style.top = '70px';
+                    nav.style.left = '0';
+                    nav.style.width = '100%';
+                    nav.style.backgroundColor = 'white';
+                    nav.style.padding = '20px';
+                    nav.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

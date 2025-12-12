@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои проекты - CodeGen AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/projects_style.css">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+            <span>CodeGen AI</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="generator.html">Генератор</a></li>
+                <li><a href="templates.html">Шаблоны</a></li>
+                <li><a href="projects.html" class="active">Проекты</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="page-header">
+            <h1>Мои проекты</h1>
+            <p class="page-subtitle">История всех сгенерированных проектов и модулей</p>
+        </div>
+
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-folder"></i></div>
+                    </div>
+                    <div class="stat-value" id="totalProjects">0</div>
+                    <div class="stat-label">Всего проектов</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                    <div class="stat-value" id="completedProjects">0</div>
+                    <div class="stat-label">Завершенных</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon"><i class="fas fa-code"></i></div>
+                    </div>
+                    <div class="stat-value" id="totalLines">0</div>
+                    <div class="stat-label">Строк кода</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-section">
+            <div class="section-header">
+                <h2>Активные проекты</h2>
+                <button class="create-project-btn" id="openModalBtn">
+                    <i class="fas fa-plus"></i> Новый проект
+                </button>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid">
+                <div style="grid-column: 1/-1; text-align: center; color: var(--gray-color);">
+                    <i class="fas fa-spinner fa-spin"></i> Загрузка проектов...
+                </div>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-folder-open"></i>
+                <h3>Нет проектов</h3>
+                <p>Нажмите "Новый проект", чтобы создать рабочую область.</p>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div id="createProjectModal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+        <h2>Создать новый проект</h2>
+        <form id="projectForm">
+            <div class="form-group">
+                <label>Название проекта</label>
+                <input type="text" id="projectName" placeholder="Например: API для пользователей" required>
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="projectDescription" placeholder="Опишите назначение"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Язык</label>
+                <select id="projectLanguage" required>
+                    <option value="typescript">TypeScript</option>
+                    <option value="java">Java</option>
+                    <option value="python">Python</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Фреймворк</label>
+                <select id="projectFramework" required>
+                    <option value="react">React</option>
+                    <option value="spring">Spring Boot</option>
+                    <option value="django">Django</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Статус</label>
+                <select id="projectStatus">
+                    <option value="DRAFT">Черновик</option>
+                    <option value="COMPLETED">Завершен</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="submit">Создать</button>
+                <button type="button" id="cancelCreate">Отмена</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-bottom"><p>&copy; 2025 CodeGen AI.</p></div>
+    </div>
+</footer>
+
+<script type="module">
+    import { getUserProjects, createProject, deleteProject, showNotification } from '/js/frontend-config.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProjects();
+        setupModal();
+    });
+
+    async function loadProjects() {
+        const grid = document.getElementById('projectsGrid');
+        const emptyState = document.getElementById('emptyState');
+
+        try {
+            const projects = await getUserProjects();
+
+            updateStats(projects);
+
+            if (projects.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                // стили
+                const statusClass = proj.status === 'COMPLETED' ? 'status' : 'status-draft';
+                const statusText = proj.status === 'COMPLETED' ? 'Завершен' : 'Черновик';
+
+                card.innerHTML = `
+                        <div class="project-header">
+                            <h3 class="project-title">${proj.name}</h3>
+                            <p class="project-description">${proj.description || 'Нет описания'}</p>
+                        </div>
+
+                        <div class="project-tags">
+                            <span class="project-tag language">${proj.language}</span>
+                            <span class="project-tag framework">${proj.framework}</span>
+                            <span class="project-tag ${statusClass}">${statusText}</span>
+                        </div>
+
+                        <div class="project-stats">
+                            <div class="stat-item">
+                                <span class="stat-item-label">Строк кода:</span>
+                                <span class="stat-item-value">${proj.linesOfCode || 0}</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-item-label">Файлов:</span>
+                                <span class="stat-item-value">${proj.filesCount || 0}</span>
+                            </div>
+                        </div>
+
+                        <div class="project-meta">
+                            <i class="far fa-clock"></i>
+                            <span>Обновлен: ${new Date(proj.updatedAt).toLocaleDateString()}</span>
+                        </div>
+
+                        <div class="project-footer">
+                            <div class="project-actions">
+                                <button class="action-btn primary" onclick="window.location.href='generator.html'">
+                                    <i class="fas fa-code"></i> Код
+                                </button>
+                            </div>
+                            <button class="action-btn danger" onclick="removeProject(${proj.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                grid.appendChild(card);
+            });
+
+        } catch (e) {
+            console.error(e);
+            showNotification('Ошибка загрузки проектов', 'error');
+        }
+    }
+
+    function updateStats(projects) {
+        document.getElementById('totalProjects').innerText = projects.length;
+        document.getElementById('completedProjects').innerText = projects.filter(p => p.status === 'COMPLETED').length;
+        const totalLines = projects.reduce((sum, p) => sum + (p.linesOfCode || 0), 0);
+        document.getElementById('totalLines').innerText = totalLines.toLocaleString();
+    }
+
+    window.removeProject = async (id) => {
+        if(!confirm('Вы уверены, что хотите удалить этот проект?')) return;
+
+        try {
+            await deleteProject(id);
+            showNotification('Проект удален', 'success');
+            loadProjects();
+        } catch (e) {
+            showNotification('Не удалось удалить проект', 'error');
+        }
+    };
+
+    function setupModal() {
+        const modal = document.getElementById('createProjectModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('modalClose');
+        const cancelBtn = document.getElementById('cancelCreate');
+        const form = document.getElementById('projectForm');
+
+        const open = () => modal.style.display = 'flex';
+        const close = () => modal.style.display = 'none';
+
+        openBtn.addEventListener('click', open);
+        closeBtn.addEventListener('click', close);
+        cancelBtn.addEventListener('click', close);
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            const oldText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            const data = {
+                name: document.getElementById('projectName').value,
+                description: document.getElementById('projectDescription').value,
+                language: document.getElementById('projectLanguage').value,
+                framework: document.getElementById('projectFramework').value,
+                status: document.getElementById('projectStatus').value
+            };
+
+            try {
+                await createProject(data);
+                showNotification('Проект создан!', 'success');
+                close();
+                form.reset();
+                loadProjects();
+            } catch (err) {
+                showNotification('Ошибка создания', 'error');
+            } finally {
+                btn.innerHTML = oldText;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+        const nav = document.querySelector('nav ul');
+        nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    });
+</script>
+</body>
+</html>

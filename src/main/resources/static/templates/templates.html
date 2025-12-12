@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека шаблонов - CodeGen AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/templates_style.css">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-robot"></i>
+            <span>CodeGen AI</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="generator.html">Генератор</a></li>
+                <li><a href="templates.html" class="active">Шаблоны</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="profile.html">Профиль</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <div class="page-header">
+            <h1>Библиотека шаблонов</h1>
+            <p class="page-subtitle">Готовые решения для ускорения вашей разработки</p>
+        </div>
+
+        <section class="filters-section">
+            <h2>Фильтры</h2>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Поиск шаблонов...">
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <h3>Тип шаблона</h3>
+                    <div class="filter-options" id="categoryFilters">
+                        <label class="filter-tag active" data-value="all">
+                            <input type="radio" name="category" value="all" checked hidden>
+                            Все
+                        </label>
+                        <label class="filter-tag" data-value="CONTROLLER">
+                            <input type="radio" name="category" value="CONTROLLER" hidden>
+                            Контроллеры
+                        </label>
+                        <label class="filter-tag" data-value="ALGORITHM">
+                            <input type="radio" name="category" value="ALGORITHM" hidden>
+                            Алгоритмы
+                        </label>
+                        <label class="filter-tag" data-value="UI_COMPONENT">
+                            <input type="radio" name="category" value="UI_COMPONENT" hidden>
+                            UI Компоненты
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Язык</h3>
+                    <div class="filter-options" id="languageFilters">
+                        <label class="filter-tag active" data-value="all">
+                            <input type="radio" name="language" value="all" checked hidden>
+                            Все
+                        </label>
+                        <label class="filter-tag" data-value="java">
+                            <input type="radio" name="language" value="java" hidden>
+                            Java
+                        </label>
+                        <label class="filter-tag" data-value="typescript">
+                            <input type="radio" name="language" value="typescript" hidden>
+                            TypeScript
+                        </label>
+                        <label class="filter-tag" data-value="python">
+                            <input type="radio" name="language" value="python" hidden>
+                            Python
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="templates-section">
+            <div class="templates-grid" id="templatesGrid">
+                <div class="loading-state" style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary-color)"></i>
+                    <p style="margin-top: 20px; color: var(--gray-color);">Загрузка библиотеки...</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <h2>Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-code"></i></div>
+                    <div class="stat-value" id="totalTemplatesCount">0</div>
+                    <div class="stat-label">Шаблонов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-download"></i></div>
+                    <div class="stat-value" id="totalDownloadsCount">0</div>
+                    <div class="stat-label">Всего загрузок</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-bottom"><p>&copy; 2025 CodeGen AI.</p></div>
+    </div>
+</footer>
+
+<script type="module">
+    import { getTemplates, getDownloadUrl, showNotification } from '/js/frontend-config.js';
+
+    let allTemplates = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadData();
+        setupFilters();
+    });
+
+    async function loadData() {
+        const grid = document.getElementById('templatesGrid');
+
+        try {
+            allTemplates = await getTemplates();
+            renderTemplates(allTemplates);
+            updateStats(allTemplates);
+        } catch (e) {
+            grid.innerHTML = `<div style="text-align:center; grid-column:1/-1;">
+                    <i class="fas fa-exclamation-circle fa-3x" style="color: #ef4444; margin-bottom: 20px;"></i>
+                    <p>Не удалось загрузить шаблоны. Попробуйте обновить страницу.</p>
+                </div>`;
+        }
+    }
+
+    function renderTemplates(templates) {
+        const grid = document.getElementById('templatesGrid');
+        grid.innerHTML = '';
+
+        if (templates.length === 0) {
+            grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1; text-align:center; padding: 40px;">
+                    <i class="fas fa-search fa-3x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+                    <h3>Ничего не найдено</h3>
+                    <p style="color: #64748b">Попробуйте изменить параметры фильтрации</p>
+                </div>`;
+            return;
+        }
+
+        templates.forEach(tpl => {
+            const card = document.createElement('div');
+            card.className = 'template-card';
+            card.dataset.language = tpl.language ? tpl.language.toLowerCase() : 'other';
+            card.dataset.type = tpl.type ? tpl.type : 'OTHER';
+
+            card.innerHTML = `
+                    <div class="template-header">
+                        <h3>${tpl.name}</h3>
+                        <p class="template-description">${tpl.description || 'Нет описания'}</p>
+                    </div>
+
+                    <div class="template-tags">
+                        <span class="template-tag language">${tpl.language}</span>
+                        ${tpl.framework ? `<span class="template-tag framework">${tpl.framework}</span>` : ''}
+                        <span class="template-tag category">${formatType(tpl.type)}</span>
+                    </div>
+
+                    <div class="template-footer">
+                        <div class="download-count">
+                            <i class="fas fa-download"></i>
+                            <span id="count-${tpl.id}">${tpl.usageCount} загрузок</span>
+                        </div>
+                        <button class="download-btn" onclick="downloadFile(${tpl.id}, '${tpl.name}')">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                    </div>
+                `;
+            grid.appendChild(card);
+        });
+    }
+
+    window.downloadFile = function(id, name) {
+        const btn = event.currentTarget;
+        const originalHtml = btn.innerHTML;
+
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        const link = document.createElement('a');
+        link.href = getDownloadUrl(id);
+        link.setAttribute('download', ''); // принудительное скачивание
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        showNotification(`Скачивание "${name}" началось`, 'success');
+
+        const countSpan = document.getElementById(`count-${id}`);
+        if(countSpan) {
+            const current = parseInt(countSpan.innerText);
+            countSpan.innerText = `${current + 1} загрузок`;
+        }
+
+        setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        }, 1000);
+    };
+
+    function setupFilters() {
+        const searchInput = document.getElementById('searchInput');
+        const typeFilters = document.querySelectorAll('#categoryFilters .filter-tag');
+        const langFilters = document.querySelectorAll('#languageFilters .filter-tag');
+
+        // применение фильтров
+        const applyFilters = () => {
+            const searchValue = searchInput.value.toLowerCase();
+            const selectedType = document.querySelector('input[name="category"]:checked').value;
+            const selectedLang = document.querySelector('input[name="language"]:checked').value;
+
+            const filtered = allTemplates.filter(t => {
+                const matchSearch = t.name.toLowerCase().includes(searchValue) ||
+                    (t.description && t.description.toLowerCase().includes(searchValue));
+                const matchType = selectedType === 'all' || t.type === selectedType;
+                const matchLang = selectedLang === 'all' || t.language.toLowerCase() === selectedLang.toLowerCase();
+
+                return matchSearch && matchType && matchLang;
+            });
+
+            renderTemplates(filtered);
+        };
+
+        searchInput.addEventListener('input', applyFilters);
+
+        const setupRadioGroup = (group) => {
+            group.forEach(label => {
+                label.addEventListener('click', () => {
+                    group.forEach(l => l.classList.remove('active'));
+                    label.classList.add('active');
+                    //задержка
+                    setTimeout(applyFilters, 0);
+                });
+            });
+        };
+
+        setupRadioGroup(typeFilters);
+        setupRadioGroup(langFilters);
+    }
+
+    function updateStats(templates) {
+        document.getElementById('totalTemplatesCount').innerText = templates.length;
+        const totalDownloads = templates.reduce((sum, t) => sum + (t.usageCount || 0), 0);
+        document.getElementById('totalDownloadsCount').innerText = totalDownloads.toLocaleString();
+    }
+
+    function formatType(type) {
+        const map = {
+            'CONTROLLER': 'Контроллер',
+            'ALGORITHM': 'Алгоритм',
+            'UI_COMPONENT': 'UI Компонент',
+            'OTHER': 'Разное'
+        };
+        return map[type] || type;
+    }
+
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+        const nav = document.querySelector('nav ul');
+        nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    });
+</script>
+</body>
+</html>
